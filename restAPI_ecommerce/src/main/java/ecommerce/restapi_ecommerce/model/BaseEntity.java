@@ -1,4 +1,4 @@
-package e_commerce.restAPI_ecommerce.model;
+package ecommerce.restapi_ecommerce.model;
 
 import java.io.Serializable;
 
