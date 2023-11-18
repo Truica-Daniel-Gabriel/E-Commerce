@@ -1,4 +1,4 @@
-package e_commerce.restAPI_ecommerce;
+package ro.devdepot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
