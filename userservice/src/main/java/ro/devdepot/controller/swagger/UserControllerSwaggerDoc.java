@@ -12,5 +12,5 @@ public interface UserControllerSwaggerDoc {
 //
 //            }
 //            """)
-    public ResponseEntity<List<User>> getUsers();
+//    public ResponseEntity<List<User>> getUsers();
 }
