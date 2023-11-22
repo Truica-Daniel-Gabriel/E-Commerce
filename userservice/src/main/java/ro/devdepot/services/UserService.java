@@ -4,7 +4,6 @@ import ro.devdepot.model.User;
 import ro.devdepot.model.dto.LoginRequest;
 import ro.devdepot.model.dto.LoginResponse;
 
-public interface UserService extends CrudService<User, Long>{
+public interface UserService {
     public LoginResponse login(LoginRequest loginRequest);
-
 }
