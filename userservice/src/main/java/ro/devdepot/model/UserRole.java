@@ -2,20 +2,16 @@ package ro.devdepot.model;
 
 
 public enum UserRole {
-    ADMIN("admin","url"),
-    USER("user","url");
+    ADMIN("admin"),
+    USER("user");
 
     private String name;
     private String roleImageUrl;
 
-    UserRole(String name, String roleImageUrl) {
+    UserRole(String name) {
         this.name = name;
-        this.roleImageUrl = roleImageUrl;
     }
     public String getName() {
         return this.name;
-    }
-    public String getRoleImageUrl() {
-        return this.roleImageUrl;
     }
 }
