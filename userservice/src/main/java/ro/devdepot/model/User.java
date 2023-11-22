@@ -1,6 +1,6 @@
 package ro.devdepot.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
