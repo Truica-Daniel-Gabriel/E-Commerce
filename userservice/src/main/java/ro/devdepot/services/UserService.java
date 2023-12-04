@@ -2,19 +2,22 @@ package ro.devdepot.services;
 
 import ro.devdepot.model.User;
 import ro.devdepot.model.UserRole;
+import ro.devdepot.model.dto.CreateUserRequest;
 import ro.devdepot.model.dto.LoginRequest;
 import ro.devdepot.model.dto.LoginResponse;
+import ro.devdepot.model.dto.UpdateUserRequest;
+import ro.devdepot.model.dto.response.GetUserResponse;
 
 import java.util.List;
 
 public interface UserService {
     public LoginResponse login(LoginRequest loginRequest);
 
-    User createUser(User user);
-    User updateUser(User user, Long id);
-    User updateUserRole(UserRole userRole, Long id);
-    User getUserById(Long id);
-    List<User> getAllUsers();
-    void deleteUserById(Long id);
+    String createUser(CreateUserRequest createUserRequest);
+    String updateUser(UpdateUserRequest user, Long id);
+    String updateUserRole(String userrole, Long id);
+    GetUserResponse getUserById(Long id);
+    List<GetUserResponse> getAllUsers();
+    String deleteUserById(Long id);
 
 }
