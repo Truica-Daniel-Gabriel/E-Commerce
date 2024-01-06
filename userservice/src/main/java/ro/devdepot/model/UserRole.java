@@ -5,9 +5,7 @@ public enum UserRole {
     ADMIN("admin"),
     USER("user");
 
-    private String name;
-    private String roleImageUrl;
-
+    private final String name;
     UserRole(String name) {
         this.name = name;
     }
