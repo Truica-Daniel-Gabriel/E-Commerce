@@ -1,13 +1,13 @@
 package ro.devdepot.model.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 @Setter
 @Getter
-@Service
-public class LoginResponse {
+@Builder
+public class AuthenticationResponse {
     private String username;
     private String jsonToken;
 }
