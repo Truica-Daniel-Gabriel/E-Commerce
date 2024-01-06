@@ -13,7 +13,7 @@ import java.util.List;
 public interface UserService {
     public LoginResponse login(LoginRequest loginRequest);
 
-    String createUser(CreateUserRequest createUserRequest);
+    void createUser(CreateUserRequest createUserRequest);
     String updateUser(UpdateUserRequest user, Long id);
     String updateUserRole(String userrole, Long id);
     GetUserResponse getUserById(Long id);

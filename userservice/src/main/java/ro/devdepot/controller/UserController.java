@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController implements UserControllerSwaggerDoc {
 
     private final UserService userService;
@@ -35,19 +35,20 @@ public class UserController implements UserControllerSwaggerDoc {
 
     @PostMapping("/register")
     ResponseEntity<String> register(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        userService.createUser(createUserRequest);
 
-        return new ResponseEntity<>(userService.createUser(createUserRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
     }
     @PutMapping("/updateUser/{id}")
     ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest, @PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(userService.updateUser(updateUserRequest, id), HttpStatus.OK);
     }
 
-    @PatchMapping("/updateUserrole/{id}")
+    @PatchMapping("/updateUserRole/{id}")
     ResponseEntity<String> updateUserRole(@RequestBody UpdateUserRoleRequest userRole,
                                           @PathVariable(name = "id") Long id) {
 
-        return new ResponseEntity<>(userService.updateUserRole(userRole.getUserrole(), id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUserRole(userRole.getUserRole(), id), HttpStatus.OK);
     }
     @GetMapping("/getUser/{id}")
     ResponseEntity<GetUserResponse> getUser(@PathVariable(name = "id") Long id) {

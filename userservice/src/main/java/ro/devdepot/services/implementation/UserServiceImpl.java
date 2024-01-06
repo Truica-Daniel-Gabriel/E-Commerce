@@ -42,16 +42,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String createUser(CreateUserRequest createUserRequest) {
+    public void createUser(CreateUserRequest createUserRequest) {
 
         validateUserDto(createUserRequest);
 
         User userCreated = userRepository.save(userMapper.getUserFrom(createUserRequest));
 
-        if(userCreated.getId() != null) {
-            return "User created with successfully";
+        if(userCreated.getId() == null) {
+            throw new BusinessException("Something goes wrong", HttpStatus.BAD_REQUEST);
         }
-        throw new BusinessException("Something goes wrong", HttpStatus.CONFLICT);
     }
 
     @Override
@@ -135,11 +134,7 @@ public class UserServiceImpl implements UserService {
     private void validateUserDto(CreateUserRequest createUserRequest) {
 
         if(userRepository.existsByUsername(createUserRequest.getUsername())) {
-            throw new BusinessException("This username already exist!", HttpStatus.BAD_REQUEST);
-        }
-
-        if(createUserRequest.getPassword().length() < 6 || createUserRequest.getPassword().length() > 18) {
-            throw new BusinessException("Your password it's invalid", HttpStatus.BAD_REQUEST);
+            throw new BusinessException("This username already exist!", HttpStatus.CONFLICT);
         }
     }
 }

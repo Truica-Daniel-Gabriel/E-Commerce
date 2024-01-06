@@ -12,5 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateUserRoleRequest {
     @NotBlank(message = "User role could not be blank")
-    private String userrole;
+    private String userRole;
 }
