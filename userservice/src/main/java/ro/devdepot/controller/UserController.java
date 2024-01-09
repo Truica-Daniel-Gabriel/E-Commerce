@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.devdepot.controller.swagger.UserControllerSwaggerDoc;
+import ro.devdepot.exception.BusinessException;
 import ro.devdepot.model.User;
 import ro.devdepot.model.dto.CreateUserRequest;
 import ro.devdepot.model.dto.LoginRequest;
@@ -40,15 +41,16 @@ public class UserController implements UserControllerSwaggerDoc {
         return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
     }
     @PutMapping("/updateUser/{id}")
-    ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest, @PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(userService.updateUser(updateUserRequest, id), HttpStatus.OK);
+    ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest,
+                                      @PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>( "User " + userService.updateUser(updateUserRequest, id) + " has been saved successfully", HttpStatus.OK);
     }
 
     @PatchMapping("/updateUserRole/{id}")
     ResponseEntity<String> updateUserRole(@RequestBody UpdateUserRoleRequest userRole,
                                           @PathVariable(name = "id") Long id) {
 
-        return new ResponseEntity<>(userService.updateUserRole(userRole.getUserRole(), id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUserRole(userRole.getUserRole(), id)  + " user role has been successfully updated", HttpStatus.OK);
     }
     @GetMapping("/getUser/{id}")
     ResponseEntity<GetUserResponse> getUser(@PathVariable(name = "id") Long id) {
@@ -62,6 +64,12 @@ public class UserController implements UserControllerSwaggerDoc {
 
     @DeleteMapping("/deleteUser/{id}")
     ResponseEntity<String> deleteUser(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(userService.deleteUserById(id), HttpStatus.OK);
+        try {
+            userService.deleteUserById(id);
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        }catch (BusinessException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        }
+
     }
 }

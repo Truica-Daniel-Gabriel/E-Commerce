@@ -54,32 +54,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateUser(UpdateUserRequest updateUserRequest, Long id) {
+    public Long updateUser(UpdateUserRequest updateUserRequest, Long id) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("User with id: " + id + " was not found", HttpStatus.NOT_FOUND));
         user.setEmail(updateUserRequest.getEmail());
         user.setFirstName(updateUserRequest.getFirstName());
         user.setLastName(updateUserRequest.getLastName());
-        userRepository.save(user);
+        User updatedUser = userRepository.save(user);
+        if(updatedUser.getId() == null) {
+            throw new BusinessException("Something goes wrong", HttpStatus.BAD_REQUEST);
+        }
 
-        return "User " + user.getUsername() + " has been saved successfully";
+        return user.getId();
     }
 
     @Override
-    public String updateUserRole(String userrole, Long id) {
+    public Long updateUserRole(String userRole, Long id) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("User with id: " + id + " was not found", HttpStatus.NOT_FOUND));
         try {
-            UserRole role = UserRole.valueOf(userrole.toUpperCase());
+            UserRole role = UserRole.valueOf(userRole.toUpperCase());
 
             if(role == user.getUserRole()){
-                throw new BusinessException("Your user role does not have to be the same as your current user role", HttpStatus.BAD_REQUEST);
+                return user.getId();
             }
 
             user.setUserRole(role);
             userRepository.save(user);
-
-            return user.getUsername() + " user role has been successfully updated";
+            return user.getId();
 
         }catch (IllegalArgumentException e) {
             throw new BusinessException("This user role does not exist", HttpStatus.BAD_REQUEST);
@@ -123,12 +125,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteUserById(Long id) {
+    public void deleteUserById(Long id) {
+        if(userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        }
 
-        userRepository.findById(id).orElseThrow(() -> new BusinessException("This user does not exist", HttpStatus.BAD_REQUEST));
-        userRepository.deleteById(id);
-
-        return "User deleted successfully";
+        throw  new BusinessException("This user does not exist", HttpStatus.BAD_REQUEST);
     }
 
     private void validateUserDto(CreateUserRequest createUserRequest) {

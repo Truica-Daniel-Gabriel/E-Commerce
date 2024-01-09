@@ -9,15 +9,16 @@ import ro.devdepot.model.dto.UpdateUserRequest;
 import ro.devdepot.model.dto.response.GetUserResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     public LoginResponse login(LoginRequest loginRequest);
 
     void createUser(CreateUserRequest createUserRequest);
-    String updateUser(UpdateUserRequest user, Long id);
-    String updateUserRole(String userrole, Long id);
+    Long updateUser(UpdateUserRequest user, Long id);
+    Long updateUserRole(String userRole, Long id);
     GetUserResponse getUserById(Long id);
     List<GetUserResponse> getAllUsers();
-    String deleteUserById(Long id);
+    void deleteUserById(Long id);
 
 }
