@@ -15,7 +15,7 @@ import ro.devdepot.services.UserService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1/user")
 public class UserController implements UserControllerSwaggerDoc {
 
     private final UserService userService;
