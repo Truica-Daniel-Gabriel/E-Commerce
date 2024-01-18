@@ -1,6 +1,5 @@
 package ro.devdepot.model.dto.response;
 
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
