@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ro.devdepot.security.CustomAuthenticationEntryPointHandler;
+import ro.devdepot.security.CustomJWTAccessDeniedHandler;
 import ro.devdepot.security.JwtAuthenticationFilter;
 
 @Configuration
@@ -33,23 +35,33 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/api/v1/user/**")
+                                .requestMatchers("/api/v1/auth/**")
                                 .permitAll()
-                                .anyRequest()
+                                .requestMatchers("/api/v1/user/**")
                                 .authenticated()
-
+                                .requestMatchers("**")
+                                .denyAll()
                 )
                 .sessionManagement((sessionManagement) -> sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
+                .exceptionHandling(exceptionHandling -> {
+                    exceptionHandling.accessDeniedHandler(customJWTAccessDeniedHandler());
+                    exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPointHandler());
+                })
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-
 
         return http.build();
     }
 
+    @Bean
+    public CustomAuthenticationEntryPointHandler customAuthenticationEntryPointHandler() {
+        return new CustomAuthenticationEntryPointHandler();
+    }
 
+    @Bean CustomJWTAccessDeniedHandler customJWTAccessDeniedHandler() {
+        return new CustomJWTAccessDeniedHandler();
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

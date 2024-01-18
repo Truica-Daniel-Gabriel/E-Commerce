@@ -1,4 +1,4 @@
-package ro.devdepot.model.dto;
+package ro.devdepot.model.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

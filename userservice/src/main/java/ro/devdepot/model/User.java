@@ -20,16 +20,34 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "username")
     private String username;
+
     @Setter(value = AccessLevel.NONE)
     @Column(name = "password")
     private String password;
+
     @Column(name = "email")
     private String email;
-    @Column(name = "userrole")
+
+    @Column(name = "userRole")
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Column(name = "firstName")
+    private String firstName;
+
+    @Column(name = "lastName")
+    private String lastName;
+
+    @OneToMany
+    @JoinTable(
+            name = "user_address",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private List<Address> addresses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

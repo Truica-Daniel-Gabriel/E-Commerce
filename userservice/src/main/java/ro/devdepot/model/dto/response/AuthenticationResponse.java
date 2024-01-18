@@ -1,4 +1,5 @@
-package ro.devdepot.model.dto;
+package ro.devdepot.model.dto.response;
+
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,5 +10,6 @@ import lombok.Setter;
 @Builder
 public class AuthenticationResponse {
     private String username;
+
     private String jsonToken;
 }
