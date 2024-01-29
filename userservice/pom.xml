@@ -7,10 +7,10 @@
 		<artifactId>ecommerce</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>ro</groupId>
+
 	<artifactId>devdepot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>restAPI_ecommerce</name>
+	<name>userservice</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
@@ -82,6 +82,14 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 
 

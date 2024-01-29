@@ -11,4 +11,6 @@ public class AuthenticationResponse {
     private String username;
 
     private String jsonToken;
+
+    private Long id;
 }

@@ -5,6 +5,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import ro.devdepot.model.User;
 import ro.devdepot.model.UserRole;
@@ -15,6 +17,7 @@ import ro.devdepot.model.dto.request.LoginRequest;
 import ro.devdepot.model.dto.request.UpdateUserRequest;
 import ro.devdepot.model.dto.mapper.UserMapper;
 import ro.devdepot.model.dto.response.GetUserResponse;
+import ro.devdepot.model.dto.response.RegisterResponse;
 import ro.devdepot.repositories.UserRepository;
 import ro.devdepot.services.JwtService;
 import ro.devdepot.services.UserService;
@@ -41,16 +44,21 @@ public class UserServiceImpl implements UserService {
                         loginRequest.getPassword()
                 )
         );
-        String jwtToken = jwtService.generateToken(loginRequest.getUsername());
+
+        User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(()-> new BusinessException("Not found", HttpStatus.NOT_FOUND));
+        
+        String jwtToken = jwtService.generateToken(user.getUsername());
+
 
         return AuthenticationResponse.builder()
                 .jsonToken(jwtToken)
                 .username(loginRequest.getUsername())
+                .id(user.getId())
                 .build();
     }
 
     @Override
-    public void createUser(CreateUserRequest createUserRequest) {
+    public RegisterResponse createUser(CreateUserRequest createUserRequest) {
 
         validateUserDto(createUserRequest);
 
@@ -59,6 +67,8 @@ public class UserServiceImpl implements UserService {
         if(userCreated.getId() == null) {
             throw new BusinessException("Something goes wrong", HttpStatus.BAD_REQUEST);
         }
+
+        return new RegisterResponse("User created successfully");
     }
 
     @Override

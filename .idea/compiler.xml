@@ -14,13 +14,17 @@
     <bytecodeTargetLevel>
       <module name="core (1)" target="20" />
       <module name="core (2)" target="20" />
+      <module name="productservice" target="17" />
       <module name="untitled" target="20" />
+      <module name="userservice" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="core" options="-parameters" />
       <module name="devdepot" options="-parameters" />
+      <module name="productservice" options="-parameters" />
+      <module name="userservice" options="-parameters" />
     </option>
   </component>
 </project>

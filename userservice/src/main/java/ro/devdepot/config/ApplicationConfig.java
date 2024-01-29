@@ -3,12 +3,16 @@ package ro.devdepot.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import ro.devdepot.repositories.UserRepository;
 
 @Configuration
+@EnableScheduling
 @RequiredArgsConstructor
 public class ApplicationConfig {
     private final UserRepository repository;
@@ -18,12 +22,10 @@ public class ApplicationConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return repository.findByUsername(username).orElseThrow(()->
-                        new UsernameNotFoundException("Not found")
+                return repository.findByUsername(username).orElseThrow(() ->
+                      new UsernameNotFoundException("Not found")
                 );
             }
         };
     }
-
-
 }

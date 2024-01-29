@@ -54,6 +54,7 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+
     @Bean
     public CustomAuthenticationEntryPointHandler customAuthenticationEntryPointHandler() {
         return new CustomAuthenticationEntryPointHandler();

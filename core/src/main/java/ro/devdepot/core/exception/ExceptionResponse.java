@@ -16,4 +16,5 @@ public class ExceptionResponse {
         this.httpStatus = httpStatus;
         this.timestamp = timestamp;
     }
+
 }

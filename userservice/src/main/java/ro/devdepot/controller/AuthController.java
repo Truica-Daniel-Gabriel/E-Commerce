@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.devdepot.model.dto.response.AuthenticationResponse;
 import ro.devdepot.model.dto.request.CreateUserRequest;
 import ro.devdepot.model.dto.request.LoginRequest;
+import ro.devdepot.model.dto.response.RegisterResponse;
 import ro.devdepot.services.UserService;
 
 
@@ -25,10 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    ResponseEntity<String> register(@RequestBody @Valid CreateUserRequest createUserRequest) {
-        userService.createUser(createUserRequest);
-
-        return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
+    ResponseEntity<RegisterResponse> register(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        return new ResponseEntity<>(userService.createUser(createUserRequest), HttpStatus.CREATED);
     }
 
 }
