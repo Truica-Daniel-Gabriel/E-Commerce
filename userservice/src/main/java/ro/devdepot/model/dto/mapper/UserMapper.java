@@ -1,17 +1,19 @@
 package ro.devdepot.model.dto.mapper;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ro.devdepot.model.User;
 import ro.devdepot.model.UserRole;
-import ro.devdepot.model.dto.CreateUserRequest;
-import ro.devdepot.model.dto.UpdateUserRequest;
+import ro.devdepot.model.dto.request.CreateUserRequest;
 
+@RequiredArgsConstructor
 @Service
 public class UserMapper {
+    private final PasswordEncoder passwordEncoder;
 
     public User getUserFrom(CreateUserRequest createUserRequest) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(16);
+
         return User
                 .builder()
                 .username(createUserRequest.getUsername())

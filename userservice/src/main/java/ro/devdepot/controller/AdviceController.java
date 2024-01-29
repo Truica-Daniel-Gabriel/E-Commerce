@@ -1,12 +1,13 @@
 package ro.devdepot.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ro.devdepot.exception.ExceptionResponse;
-import ro.devdepot.exception.BusinessException;
+import ro.devdepot.core.exception.ExceptionResponse;
+import ro.devdepot.core.exception.BusinessException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -20,7 +21,6 @@ public class AdviceController {
     public ResponseEntity<Object> handleApiRequestException(BusinessException e){
         ExceptionResponse apiException = new ExceptionResponse(
                 e.getMessage(),
-                e,
                 e.getHttpStatus(),
                 ZonedDateTime.now(ZoneId.of("Z"))
         );

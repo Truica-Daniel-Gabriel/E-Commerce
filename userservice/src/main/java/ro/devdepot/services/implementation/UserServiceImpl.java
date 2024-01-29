@@ -1,48 +1,64 @@
 package ro.devdepot.services.implementation;
 
+import lombok.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import ro.devdepot.exception.BusinessException;
 import ro.devdepot.model.User;
 import ro.devdepot.model.UserRole;
-import ro.devdepot.model.dto.CreateUserRequest;
-import ro.devdepot.model.dto.LoginRequest;
-import ro.devdepot.model.dto.LoginResponse;
-import ro.devdepot.model.dto.UpdateUserRequest;
+import ro.devdepot.model.dto.response.AuthenticationResponse;
+import ro.devdepot.core.exception.BusinessException;
+import ro.devdepot.model.dto.request.CreateUserRequest;
+import ro.devdepot.model.dto.request.LoginRequest;
+import ro.devdepot.model.dto.request.UpdateUserRequest;
 import ro.devdepot.model.dto.mapper.UserMapper;
 import ro.devdepot.model.dto.response.GetUserResponse;
+import ro.devdepot.model.dto.response.RegisterResponse;
 import ro.devdepot.repositories.UserRepository;
+import ro.devdepot.services.JwtService;
 import ro.devdepot.services.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper createUserRequestMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = createUserRequestMapper;
+    @Override
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(()-> new BusinessException("Not found", HttpStatus.NOT_FOUND));
+        
+        String jwtToken = jwtService.generateToken(user.getUsername());
+
+
+        return AuthenticationResponse.builder()
+                .jsonToken(jwtToken)
+                .username(loginRequest.getUsername())
+                .id(user.getId())
+                .build();
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
-        // User user = repository.getUserByUsername(loginRequest.getUsername);
-        // encodedPassword =.... loginRequest.getPass
-        // iff user.getPassword.equals(encodedPassword)
-        // tokenService.getJWT(user)
-        // build new LoginResponse -> username, jwt
-        // if user.getRole.euals(UserRole.ADMIN)
-
-        return null;
-    }
-
-    @Override
-    public void createUser(CreateUserRequest createUserRequest) {
+    public RegisterResponse createUser(CreateUserRequest createUserRequest) {
 
         validateUserDto(createUserRequest);
 
@@ -51,6 +67,8 @@ public class UserServiceImpl implements UserService {
         if(userCreated.getId() == null) {
             throw new BusinessException("Something goes wrong", HttpStatus.BAD_REQUEST);
         }
+
+        return new RegisterResponse("User created successfully");
     }
 
     @Override
@@ -61,6 +79,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(updateUserRequest.getFirstName());
         user.setLastName(updateUserRequest.getLastName());
         User updatedUser = userRepository.save(user);
+
         if(updatedUser.getId() == null) {
             throw new BusinessException("Something goes wrong", HttpStatus.BAD_REQUEST);
         }
@@ -128,9 +147,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         if(userRepository.existsById(id)) {
             userRepository.deleteById(id);
+            SecurityContextHolder.clearContext();
+        } else {
+            throw  new BusinessException("This user does not exist", HttpStatus.BAD_REQUEST);
         }
-
-        throw  new BusinessException("This user does not exist", HttpStatus.BAD_REQUEST);
     }
 
     private void validateUserDto(CreateUserRequest createUserRequest) {
